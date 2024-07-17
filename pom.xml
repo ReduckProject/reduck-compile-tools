@@ -44,7 +44,6 @@
                     <!--<compilerArgument>-->
                     <!-- -proc:none-->
                     <!--</compilerArgument>-->
-
                     <proc>none</proc>
 
                     <compilerArguments>
@@ -53,14 +52,8 @@
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
-                        <!--<arg>-Werror</arg>-->
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
-                    <!--<annotationProcessors>-->
-                    <!--<annotationProcessor>-->
-                    <!--net.reduck.asm.jsr269.TestProcessor-->
-                    <!--</annotationProcessor>-->
-                    <!--</annotationProcessors>-->
                     <fork>true</fork>
                 </configuration>
             </plugin>

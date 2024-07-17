@@ -68,6 +68,3 @@
                 </executions>
             </plugin>
 ```
-
-* PS
-* 
