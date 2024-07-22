@@ -34,6 +34,15 @@ public class IgnoreCompileProcessor extends AbstractProcessor {
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
+        disabled = "true".equalsIgnoreCase(processingEnv.getOptions().get("compile.ignore.disabled"))
+                || "true".equalsIgnoreCase(System.getenv(("compile.ignore.disabled")))
+                || "true".equalsIgnoreCase(System.getProperty(("compile.ignore.disabled")))
+        ;
+        if(disabled) {
+            System.out.println("\033[33m[WARNING] compile.ignore.disabled = true\033[0m");
+            return;
+        }
+
         // 高版本IDEA对ProcessingEnvironment 进行包装，这里需要得到原始的JavacProcessingEnvironment
         if (!(processingEnv instanceof JavacProcessingEnvironment)) {
              processingEnv = jbUnwrap(ProcessingEnvironment.class, processingEnv);
@@ -43,14 +52,6 @@ public class IgnoreCompileProcessor extends AbstractProcessor {
         Context context = ((JavacProcessingEnvironment) processingEnv).getContext();
         treeMaker = TreeMaker.instance(context);
         names = Names.instance(context);
-        disabled = "true".equalsIgnoreCase(processingEnv.getOptions().get("compile.ignore.disabled"))
-                || "true".equalsIgnoreCase(System.getenv(("compile.ignore.disabled")))
-                || "true".equalsIgnoreCase(System.getProperty(("compile.ignore.disabled")))
-        ;
-
-        if(disabled) {
-            System.out.println("\033[33m[WARNING] compile.ignore.disabled = true\033[0m");
-        }
     }
 
     @Override
