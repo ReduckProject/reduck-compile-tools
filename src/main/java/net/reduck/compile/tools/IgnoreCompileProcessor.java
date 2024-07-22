@@ -16,6 +16,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 /**
@@ -33,6 +34,10 @@ public class IgnoreCompileProcessor extends AbstractProcessor {
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
+        // 高版本IDEA对ProcessingEnvironment 进行包装，这里需要得到原始的JavacProcessingEnvironment
+        if (!(processingEnv instanceof JavacProcessingEnvironment)) {
+             processingEnv = jbUnwrap(ProcessingEnvironment.class, processingEnv);
+        }
         super.init(processingEnv);
         trees = JavacTrees.instance(processingEnv);
         Context context = ((JavacProcessingEnvironment) processingEnv).getContext();
@@ -101,5 +106,17 @@ public class IgnoreCompileProcessor extends AbstractProcessor {
                 }
             });
         }
+    }
+
+
+    private static <T> T jbUnwrap(Class<? extends T> iface, T wrapper) {
+        T unwrapped = null;
+        try {
+            final Class<?> apiWrappers = wrapper.getClass().getClassLoader().loadClass("org.jetbrains.jps.javac.APIWrappers");
+            final Method unwrapMethod = apiWrappers.getDeclaredMethod("unwrap", Class.class, Object.class);
+            unwrapped = iface.cast(unwrapMethod.invoke(null, iface, wrapper));
+        }
+        catch (Throwable ignored) {}
+        return unwrapped != null? unwrapped : wrapper;
     }
 }
