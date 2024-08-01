@@ -23,6 +23,12 @@
   - 方法上编译完成后方法会删除
   - 类上编译后会生成一个空方法的类
 
+* idea启动或者单元测试报错
+  - 在设置里增加编译选项 `-Djps.track.ap.dependencies=false`
+in Settings (Preferences on macOS) | Build, Execution, Deployment | Compiler | Shared build process VM options
+该问题可能会出现在低版本IDEA中(低于2021或者2022)
+[官方问题说明](https://youtrack.jetbrains.com/issue/IDEA-274697/java-java.lang.IllegalArgumentException)
+
 * 禁用注解处理器
 
 ```pom
